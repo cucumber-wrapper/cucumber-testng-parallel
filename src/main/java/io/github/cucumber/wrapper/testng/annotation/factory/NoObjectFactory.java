@@ -1,4 +1,4 @@
-package io.github.cucumber.wrapper.testng.service;
+package io.github.cucumber.wrapper.testng.annotation.factory;
 
 import io.cucumber.core.backend.ObjectFactory;
 

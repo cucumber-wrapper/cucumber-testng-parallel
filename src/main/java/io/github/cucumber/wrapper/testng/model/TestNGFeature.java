@@ -2,7 +2,7 @@ package io.github.cucumber.wrapper.testng.model;
 
 import io.cucumber.core.gherkin.Feature;
 
-public class TestNGFeature implements FeatureContainer {
+public class TestNGFeature {
 
     private final Feature feature;
 
@@ -10,8 +10,7 @@ public class TestNGFeature implements FeatureContainer {
         this.feature = feature;
     }
 
-    @Override
-    public Feature feature() {
+    public Feature retrieve() {
         return feature;
     }
 

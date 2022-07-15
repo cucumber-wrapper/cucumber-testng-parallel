@@ -2,7 +2,7 @@ package io.github.cucumber.wrapper.testng.model;
 
 import io.cucumber.core.gherkin.Pickle;
 
-public class TestNGScenario implements ScenarioContainer {
+public class TestNGScenario {
 
     private final Pickle scenario;
     private final boolean isParametrized;
@@ -12,7 +12,6 @@ public class TestNGScenario implements ScenarioContainer {
         this.isParametrized = scenario.getKeyword().equals("Scenario Outline");
     }
 
-    @Override
     public Pickle retrieve() {
         return scenario;
     }

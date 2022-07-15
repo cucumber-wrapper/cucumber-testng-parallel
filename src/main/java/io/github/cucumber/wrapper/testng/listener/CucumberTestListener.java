@@ -1,10 +1,7 @@
-package io.github.cucumber.wrapper.testng.service;
+package io.github.cucumber.wrapper.testng.listener;
 
 import io.github.cucumber.wrapper.testng.model.TestNGFeature;
 import io.github.cucumber.wrapper.testng.model.TestNGScenario;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
 import org.testng.ITestContext;
 import org.testng.ITestListener;
 import org.testng.ITestNGMethod;
@@ -15,7 +12,6 @@ import java.text.DecimalFormat;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Slf4j
 public class CucumberTestListener implements ITestListener {
 
     @Override
@@ -55,12 +51,16 @@ public class CucumberTestListener implements ITestListener {
         System.out.println(sb.toString().replaceAll("(?m)^", "[Results] "));
     }
 
-    @Data
-    @AllArgsConstructor
     private static class FailedResult {
-        private Throwable error;
-        private TestNGScenario scenario;
-        private TestNGFeature feature;
+        private final Throwable error;
+        private final TestNGScenario scenario;
+        private final TestNGFeature feature;
+
+        public FailedResult(Throwable error, TestNGScenario scenario, TestNGFeature feature) {
+            this.error = error;
+            this.scenario = scenario;
+            this.feature = feature;
+        }
 
         @Override
         public synchronized String toString() {

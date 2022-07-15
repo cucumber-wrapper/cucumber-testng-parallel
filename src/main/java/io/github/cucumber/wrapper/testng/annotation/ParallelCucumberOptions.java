@@ -1,4 +1,4 @@
-package io.github.cucumber.wrapper.testng.service;
+package io.github.cucumber.wrapper.testng.annotation;
 
 import io.cucumber.core.options.CucumberOptionsAnnotationParser;
 import io.github.cucumber.wrapper.testng.annotation.CucumberOptions;

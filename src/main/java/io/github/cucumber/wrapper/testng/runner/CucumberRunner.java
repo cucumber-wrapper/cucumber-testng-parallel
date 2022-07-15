@@ -1,8 +1,8 @@
 package io.github.cucumber.wrapper.testng.runner;
 
 import io.cucumber.core.eventbus.EventBus;
-import io.cucumber.core.exception.CucumberException;
 import io.cucumber.core.feature.FeatureParser;
+import io.cucumber.core.feature.FeatureWithLines;
 import io.cucumber.core.filter.Filters;
 import io.cucumber.core.gherkin.Feature;
 import io.cucumber.core.gherkin.Pickle;
@@ -13,23 +13,17 @@ import io.cucumber.core.resource.ClassLoaders;
 import io.cucumber.core.runtime.*;
 import io.github.cucumber.wrapper.testng.model.TestNGFeature;
 import io.github.cucumber.wrapper.testng.model.TestNGScenario;
-import io.github.cucumber.wrapper.testng.service.CucumberOptionsImpl;
-import io.github.cucumber.wrapper.testng.service.CucumberOptionsProvider;
-import io.github.cucumber.wrapper.testng.service.TestCaseResultObserver;
-import org.testng.ITestResult;
-import org.testng.annotations.AfterMethod;
+import io.github.cucumber.wrapper.testng.annotation.CucumberOptionsImpl;
+import io.github.cucumber.wrapper.testng.annotation.provider.CucumberOptionsProvider;
+import io.github.cucumber.wrapper.testng.listener.TestCaseResultObserver;
 
-import java.io.IOException;
 import java.time.Clock;
-import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
-import java.util.stream.Stream;
 
-import static io.github.cucumber.wrapper.testng.service.TestCaseResultObserver.observe;
+import static io.github.cucumber.wrapper.testng.listener.TestCaseResultObserver.observe;
 import static java.util.stream.Collectors.toList;
 
 public class CucumberRunner {
@@ -59,7 +53,6 @@ public class CucumberRunner {
 
         RuntimeOptions runtimeOptions = new CucumberPropertiesParser()
                 .parse(CucumberProperties.fromSystemProperties())
-                .enablePublishPlugin()
                 .build(environmentOptions);
 
         EventBus bus = new TimeServiceEventBus(Clock.systemUTC(), UUID::randomUUID);

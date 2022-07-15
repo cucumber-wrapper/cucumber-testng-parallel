@@ -1,12 +1,11 @@
-package io.github.cucumber.wrapper.testng.service;
+package io.github.cucumber.wrapper.testng.listener;
 
 import io.github.cucumber.wrapper.testng.annotation.CucumberOptions;
 import org.testng.*;
 
 import java.util.Iterator;
-import java.util.Optional;
 
-public class DataProviderAdapter implements IDataProviderInterceptor {
+public class ParallelDataProviderAdapter implements IDataProviderInterceptor {
 
     @Override
     public synchronized Iterator<Object[]> intercept(Iterator<Object[]> original,

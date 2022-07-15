@@ -1,15 +1,14 @@
-package io.github.cucumber.wrapper.testng.service;
+package io.github.cucumber.wrapper.testng.annotation;
 
 import io.cucumber.core.backend.ObjectFactory;
-import io.cucumber.core.options.CucumberOptionsAnnotationParser;
 import io.cucumber.core.snippets.SnippetType;
-import io.github.cucumber.wrapper.testng.annotation.CucumberOptions;
+import io.github.cucumber.wrapper.testng.annotation.factory.NoObjectFactory;
 
 public class CucumberOptionsImpl implements ParallelCucumberOptions {
 
     private final CucumberOptions annotation;
 
-    CucumberOptionsImpl(CucumberOptions annotation) {
+    public CucumberOptionsImpl(CucumberOptions annotation) {
         this.annotation = annotation;
     }
     @Override

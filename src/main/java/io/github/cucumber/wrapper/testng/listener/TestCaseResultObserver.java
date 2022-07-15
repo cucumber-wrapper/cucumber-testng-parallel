@@ -1,4 +1,4 @@
-package io.github.cucumber.wrapper.testng.service;
+package io.github.cucumber.wrapper.testng.listener;
 
 import io.cucumber.core.eventbus.EventBus;
 import io.cucumber.plugin.event.EventPublisher;
@@ -25,7 +25,7 @@ public class TestCaseResultObserver implements AutoCloseable {
                 (exception) -> exception instanceof SkipException
                         ? exception
                         : new SkipException(exception.getMessage(), exception),
-                (l) -> new SkipException(""),
+                (suggestions) -> new RuntimeException(suggestions.toString()),
                 Function.identity());
     }
 

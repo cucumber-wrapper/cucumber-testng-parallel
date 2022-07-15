@@ -3,9 +3,9 @@ package io.github.cucumber.wrapper.testng;
 import io.github.cucumber.wrapper.testng.model.TestNGFeature;
 import io.github.cucumber.wrapper.testng.model.TestNGScenario;
 import io.github.cucumber.wrapper.testng.runner.CucumberRunner;
-import io.github.cucumber.wrapper.testng.service.CucumberTestListener;
-import io.github.cucumber.wrapper.testng.service.DataProviderAdapter;
-import io.github.cucumber.wrapper.testng.service.HideTestParameterAdapter;
+import io.github.cucumber.wrapper.testng.listener.CucumberTestListener;
+import io.github.cucumber.wrapper.testng.listener.ParallelDataProviderAdapter;
+import io.github.cucumber.wrapper.testng.listener.HideTestParameterAdapter;
 import org.testng.*;
 import org.testng.annotations.*;
 import org.testng.xml.XmlSuite;
@@ -13,7 +13,11 @@ import org.testng.xml.XmlSuite;
 import java.lang.reflect.Method;
 import java.util.Optional;
 
-@Listeners({HideTestParameterAdapter.class, DataProviderAdapter.class, CucumberTestListener.class})
+@Listeners({
+        HideTestParameterAdapter.class,
+        ParallelDataProviderAdapter.class,
+        CucumberTestListener.class
+})
 public abstract class CucumberTests implements ITest {
 
     private final ThreadLocal<String> currentScenario = new ThreadLocal<>();
@@ -21,6 +25,7 @@ public abstract class CucumberTests implements ITest {
 
     @BeforeSuite(alwaysRun = true)
     public void setParallelSuites(ITestContext testContext) {
+        testContext.getSuite().getXmlSuite().setVerbose(0);
         testContext.getSuite().getXmlSuite().setParallel(XmlSuite.ParallelMode.METHODS);
     }
 

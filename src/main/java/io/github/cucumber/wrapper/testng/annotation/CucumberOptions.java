@@ -2,7 +2,7 @@ package io.github.cucumber.wrapper.testng.annotation;
 
 import io.cucumber.core.backend.ObjectFactory;
 import io.cucumber.core.snippets.SnippetType;
-import io.github.cucumber.wrapper.testng.service.NoObjectFactory;
+import io.github.cucumber.wrapper.testng.annotation.factory.NoObjectFactory;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
