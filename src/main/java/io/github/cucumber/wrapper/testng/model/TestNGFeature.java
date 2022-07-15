@@ -16,7 +16,7 @@ public class TestNGFeature implements FeatureContainer {
     }
 
     @Override
-    public String toString() {
+    public synchronized String toString() {
         return feature.getName().orElse("Undefined Feature");
     }
 }

@@ -5,7 +5,7 @@ import io.cucumber.core.options.CucumberOptionsAnnotationParser;
 import io.cucumber.core.snippets.SnippetType;
 import io.github.cucumber.wrapper.testng.annotation.CucumberOptions;
 
-public class CucumberOptionsImpl implements CucumberOptionsAnnotationParser.CucumberOptions {
+public class CucumberOptionsImpl implements ParallelCucumberOptions {
 
     private final CucumberOptions annotation;
 
@@ -19,7 +19,7 @@ public class CucumberOptionsImpl implements CucumberOptionsAnnotationParser.Cucu
 
     @Override
     public boolean strict() {
-        return true;
+        return annotation.strict();
     }
 
     @Override
@@ -69,6 +69,11 @@ public class CucumberOptionsImpl implements CucumberOptionsAnnotationParser.Cucu
 
     @Override
     public Class<? extends ObjectFactory> objectFactory() {
-        return null;
+        return (annotation.objectFactory() == NoObjectFactory.class) ? null : annotation.objectFactory();
+    }
+
+    @Override
+    public CucumberOptions.ParallelOptions parallelOptions() {
+        return annotation.parallelOptions();
     }
 }

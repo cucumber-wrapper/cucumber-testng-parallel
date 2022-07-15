@@ -8,7 +8,7 @@ import java.util.Optional;
 public class CucumberOptionsProvider implements CucumberOptionsAnnotationParser.OptionsProvider {
 
     @Override
-    public CucumberOptionsAnnotationParser.CucumberOptions getOptions(Class<?> clazz) {
+    public CucumberOptionsImpl getOptions(Class<?> clazz) {
         return Optional.ofNullable(clazz.getAnnotation(CucumberOptions.class))
                 .map(CucumberOptionsImpl::new)
                 .orElse(null);

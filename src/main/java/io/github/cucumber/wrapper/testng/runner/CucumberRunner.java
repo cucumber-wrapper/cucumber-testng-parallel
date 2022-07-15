@@ -6,18 +6,20 @@ import io.cucumber.core.feature.FeatureParser;
 import io.cucumber.core.filter.Filters;
 import io.cucumber.core.gherkin.Feature;
 import io.cucumber.core.gherkin.Pickle;
-import io.cucumber.core.options.CucumberOptionsAnnotationParser;
-import io.cucumber.core.options.CucumberProperties;
-import io.cucumber.core.options.CucumberPropertiesParser;
-import io.cucumber.core.options.RuntimeOptions;
+import io.cucumber.core.options.*;
 import io.cucumber.core.plugin.PluginFactory;
 import io.cucumber.core.plugin.Plugins;
 import io.cucumber.core.resource.ClassLoaders;
 import io.cucumber.core.runtime.*;
 import io.github.cucumber.wrapper.testng.model.TestNGFeature;
 import io.github.cucumber.wrapper.testng.model.TestNGScenario;
+import io.github.cucumber.wrapper.testng.service.CucumberOptionsImpl;
 import io.github.cucumber.wrapper.testng.service.CucumberOptionsProvider;
+import io.github.cucumber.wrapper.testng.service.TestCaseResultObserver;
+import org.testng.ITestResult;
+import org.testng.annotations.AfterMethod;
 
+import java.io.IOException;
 import java.time.Clock;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -27,10 +29,12 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
+import static io.github.cucumber.wrapper.testng.service.TestCaseResultObserver.observe;
 import static java.util.stream.Collectors.toList;
 
 public class CucumberRunner {
 
+    private final String parallelTag;
     private final Predicate<Pickle> filters;
     private final List<Feature> features;
     private final CucumberExecutionContext context;
@@ -40,8 +44,12 @@ public class CucumberRunner {
                 .parse(CucumberProperties.fromPropertiesFile())
                 .build();
 
+        CucumberOptionsProvider optionsProvider = new CucumberOptionsProvider();
+        CucumberOptionsImpl co = optionsProvider.getOptions(clazz);
+        parallelTag = co.parallelOptions().parallelTag();
+
         RuntimeOptions annotationOptions = new CucumberOptionsAnnotationParser()
-                .withOptionsProvider(new CucumberOptionsProvider())
+                .withOptionsProvider(optionsProvider)
                 .parse(clazz)
                 .build(propertiesFileOptions);
 
@@ -92,8 +100,11 @@ public class CucumberRunner {
 
     public void runScenario(TestNGScenario scenario) {
         context.runTestCase(runner -> {
-            Pickle cucumberPickle = scenario.retrieve();
-            runner.runPickle(cucumberPickle);
+            try (TestCaseResultObserver observer = observe(runner.getBus())) {
+                Pickle cucumberPickle = scenario.retrieve();
+                runner.runPickle(cucumberPickle);
+                observer.assertTestCasePassed();
+            }
         });
     }
 
@@ -101,10 +112,19 @@ public class CucumberRunner {
         context.finishTestRun();
     }
 
-    public Object[][] provideScenarios() {
+    public Object[][] provideSequentialScenarios() {
+        return prepareScenarios(p -> !p.getTags().contains(parallelTag));
+    }
+
+    public Object[][] provideParallelScenarios() {
+        return prepareScenarios(p -> p.getTags().contains(parallelTag));
+    }
+
+    private Object[][] prepareScenarios(Predicate<Pickle> parallelTagPredicate) {
         return features.stream()
                 .flatMap(feature -> feature.getPickles().stream()
                         .filter(filters)
+                        .filter(parallelTagPredicate)
                         .map(cucumberPickle -> new Object[] {
                                 new TestNGScenario(cucumberPickle),
                                 new TestNGFeature(feature)

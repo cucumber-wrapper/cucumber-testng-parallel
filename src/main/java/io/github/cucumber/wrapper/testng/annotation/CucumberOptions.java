@@ -1,6 +1,8 @@
 package io.github.cucumber.wrapper.testng.annotation;
 
+import io.cucumber.core.backend.ObjectFactory;
 import io.cucumber.core.snippets.SnippetType;
+import io.github.cucumber.wrapper.testng.service.NoObjectFactory;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -12,6 +14,8 @@ import java.lang.annotation.Target;
 public @interface CucumberOptions {
 
     boolean dryRun() default false;
+
+    boolean strict() default true;
 
     String[] features() default {};
 
@@ -30,4 +34,15 @@ public @interface CucumberOptions {
     String[] name() default {};
 
     SnippetType snippets() default SnippetType.UNDERSCORE;
+
+    Class<? extends ObjectFactory> objectFactory() default NoObjectFactory.class;
+
+    ParallelOptions parallelOptions() default @ParallelOptions;
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.ANNOTATION_TYPE)
+    @interface ParallelOptions {
+        int threads() default 1;
+        String parallelTag() default "@Independent";
+    }
 }

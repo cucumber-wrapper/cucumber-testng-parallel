@@ -18,7 +18,7 @@ public class TestNGScenario implements ScenarioContainer {
     }
 
     @Override
-    public String toString() {
+    public synchronized String toString() {
         if (isParametrized) {
             return scenario.getName() + " [ParametersLine:" + scenario.getLocation().getLine() + "]";
         } else {
