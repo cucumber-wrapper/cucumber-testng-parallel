@@ -12,6 +12,7 @@ public class AnySteps {
 
     @Given("any step 2")
     public void anyStep2() throws Exception {
-        Thread.sleep(5000);
+        Assert.fail();
+        Thread.sleep(3000);
     }
 }
